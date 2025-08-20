@@ -1,4 +1,3 @@
-cat > run.py << 'EOF'
 import os
 import subprocess
 import shutil
@@ -121,4 +120,3 @@ try:
         CRDSetup(username)
 except NameError as e:
     print("'username' variable not found, Create a user first")
-EOF
