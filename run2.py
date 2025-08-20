@@ -6,6 +6,12 @@ CRD_SSH_Code = input("Google CRD SSH Code :")
 username = "user" #@param {type:"string"}
 password = "root" #@param {type:"string"}
 
+# User oluşturma komutları eklendi
+os.system("useradd -m " + username)
+os.system("adduser " + username + " sudo")
+os.system("echo '" + username + ":" + password + "' | sudo chpasswd")
+os.system("sed -i 's/\/bin\/sh/\/bin\/bash/g' /etc/passwd")
+
 Pin = 123456 #@param {type: "integer"}
 Autostart = True #@param {type: "boolean"}
 
@@ -53,7 +59,7 @@ class CRDSetup:
 
     @staticmethod
     def changewall():
-        os.system(f"curl -s -L -k -o xfce-verticals.png https://gitlab.com/chamod12/changewallpaper-win10/-/raw/main/CachedImage_1024_768_POS4.jpg")
+        os.system("curl -s -L -k -o xfce-verticals.png https://gitlab.com/chamod12/changewallpaper-win10/-/raw/main/CachedImage_1024_768_POS4.jpg")
         current_directory = os.getcwd()
         custom_wallpaper_path = os.path.join(current_directory, "xfce-verticals.png")
         destination_path = '/usr/share/backgrounds/xfce/'
@@ -71,7 +77,8 @@ class CRDSetup:
         print("Finalizing !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         
         if Autostart:
-            os.makedirs(f"/home/{user}/.config/autostart", exist_ok=True)
+            user_config_path = "/home/" + user + "/.config/autostart"
+            os.makedirs(user_config_path, exist_ok=True)
             link = "www.youtube.com/@The_Disala"
             colab_autostart = """[Desktop Entry]
 Type=Application
@@ -80,14 +87,15 @@ Exec=sh -c "sensible-browser {}"
 Icon=
 Comment=Open a predefined notebook at session signin.
 X-GNOME-Autostart-enabled=true""".format(link)
-            with open(f"/home/{user}/.config/autostart/colab.desktop", "w") as f:
+            desktop_file_path = user_config_path + "/colab.desktop"
+            with open(desktop_file_path, "w") as f:
                 f.write(colab_autostart)
-            os.system(f"chmod +x /home/{user}/.config/autostart/colab.desktop")
-            os.system(f"chown {user}:{user} /home/{user}/.config")
+            os.system("chmod +x " + desktop_file_path)
+            os.system("chown " + user + ":" + user + " /home/" + user + "/.config")
             
-        os.system(f"adduser {user} chrome-remote-desktop")
-        command = f"{CRD_SSH_Code} --pin={Pin}"
-        os.system(f"su - {user} -c '{command}'")
+        os.system("adduser " + user + " chrome-remote-desktop")
+        command = CRD_SSH_Code + " --pin=" + str(Pin)
+        os.system("su - " + user + " -c '" + command + "'")
         os.system("service chrome-remote-desktop start")
         
         print("..........................................................") 
