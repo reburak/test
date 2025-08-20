@@ -5,7 +5,6 @@ import shutil
 CRD_SSH_Code = input("Google CRD SSH Code :")
 username = "user" #@param {type:"string"}
 password = "root" #@param {type:"string"}
-
 Pin = 123456 #@param {type: "integer"}
 Autostart = True #@param {type: "boolean"}
 
